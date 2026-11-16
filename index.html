@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tenies Brownie Testimonials</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🍫</text></svg>">
+<style>
+:root{
+  --bg:#f4e9de; --surface:#fffaf4; --ink:#2b1810; --muted:#7a5d4d; --line:#e2cfbf;
+  --cocoa:#2b1810;color-scheme:light; --fudge:#4a2a1b; --berry:#b0304c; --cream:#f6e7d6; --shadow:0 2px 6px rgba(43,24,16,.14);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Segoe UI",system-ui,sans-serif}
+header{background:var(--cocoa);color:var(--cream);position:relative;padding:48px 20px 70px;text-align:center;
+  background-image:radial-gradient(rgba(255,255,255,.05) 1.5px,transparent 2px);background-size:22px 22px}
+header::after{content:"";position:absolute;left:0;right:0;bottom:-26px;height:28px;
+  background:radial-gradient(circle at 18px 0,var(--cocoa) 17px,transparent 18px) 0 0/36px 28px repeat-x,
+             radial-gradient(circle at 18px 0,var(--cocoa) 11px,transparent 12px) 18px 0/54px 28px repeat-x}
+.wrap{max-width:1200px;margin:0 auto}
+h1{margin:0 0 8px;font:700 clamp(30px,5vw,52px)/1.1 Georgia,"Times New Roman",serif;letter-spacing:-.01em}
+.sub{margin:0 auto;max-width:46ch;color:#d9bfa8}
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin-top:26px}
+.bar div{max-width:1200px;margin:0 auto;padding:10px 20px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.bar .count{color:var(--muted);font-size:14px;margin-right:auto}
+.bar label{font-size:14px;color:var(--muted)}
+select,button,.pick{font:inherit;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+button:hover,.pick:hover,select:hover{border-color:var(--berry)}
+:focus-visible{outline:2px solid var(--berry);outline-offset:2px}
+.pick input{display:none}
+main{max-width:1200px;margin:0 auto;padding:20px}
+#grid{column-gap:14px;column-width:var(--col,240px)}
+.item{break-inside:avoid;margin:0 0 14px;background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--fudge);border-radius:6px 6px 14px 14px;overflow:hidden;box-shadow:var(--shadow);cursor:zoom-in;min-height:120px;transition:transform .15s}
+.item:hover{transform:translateY(-3px)}
+.item img{display:block;width:100%;height:auto;background:var(--line)}
+#pager{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:18px 0 8px}
+#pager button{min-width:40px;height:40px;padding:0 12px;border-radius:10px}
+#pager button.on{background:var(--cocoa);color:var(--cream);border-color:var(--cocoa);cursor:default}
+#pager button:disabled{opacity:.4;cursor:default}
+#pager span{align-self:center;color:var(--muted)}
+#empty{display:none;text-align:center;color:var(--muted);padding:60px 20px}
+footer{text-align:center;color:var(--muted);font-size:14px;padding:10px 20px 40px}
+/* lightbox */
+#lb{position:fixed;inset:0;background:rgba(24,12,7,.94);display:none;align-items:center;justify-content:center;z-index:20}
+#lb.on{display:flex}
+#lb img{max-width:92vw;max-height:86vh;border-radius:8px;border:6px solid var(--cream)}
+#lb button{position:absolute;background:var(--berry);color:#fff;border:0;width:44px;height:44px;border-radius:50%;font-size:22px;padding:0}
+#lb .x{top:16px;right:16px}#lb .p{left:14px;top:50%}#lb .n{right:14px;top:50%}
+#lb .cap{position:absolute;bottom:14px;left:0;right:0;text-align:center;color:#d9bfa8;font-size:14px}
+@media (max-width:600px){#lb .p,#lb .n{top:auto;bottom:40px}}
+@media (prefers-reduced-motion:reduce){.item{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Tenies Brownie Love Notes</h1>
+    <p class="sub">Fudgy, chewy and shared with a smile. Here’s what our customers say about their brownies.</p>
+  </div>
+</header>
+
+<div class="bar"><div>
+  <span class="count" id="count" aria-live="polite"></span>
+  <label>Order
+    <select id="order"><option value="new">Newest first</option><option value="old">Oldest first</option><option value="rand">Shuffle</option></select>
+  </label>
+  <label>Size
+    <select id="size"><option value="180">Small</option><option value="240" selected>Medium</option><option value="360">Large</option></select>
+  </label>
+  <label class="pick">Preview my images<input type="file" id="files" accept="image/*" multiple></label>
+</div></div>
+
+<main>
+  <div id="grid"></div>
+  <nav id="pager" aria-label="Pages"></nav>
+  <div id="empty">No testimonials found yet. Check the folder path and file names in the CONFIG section of this file.</div>
+</main>
+
+<footer>Made with cocoa and care.</footer>
+
+<div id="lb" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="x" aria-label="Close">✕</button>
+  <button class="p" aria-label="Previous">‹</button>
+  <img alt="">
+  <button class="n" aria-label="Next">›</button>
+  <div class="cap"></div>
+</div>
+
+<script>
+/* ===================== CONFIG ===================== */
+const CONFIG = {
+  folder: "images/",      // folder that holds your pictures
+  prefix: "testi-",       // file name start:   testi-0001.jpg
+  exts: [".jpg", ".jpeg", ".png", ".webp"],  // file types it will look for
+  total: "auto",          // "auto" = counts the pictures by itself (or type a number)
+  digits: 4,              // zero padding: 0001, 0002 … (use 0 for no padding)
+  start: 1,               // first number
+  perPage: 10,            // pictures on each page
+  maxScan: 3000,          // safety limit for auto counting
+  // Or list files yourself (overrides everything above):
+  // list: ["images/a.jpg", "images/b.png"]
+};
+/* ================================================== */
+
+const grid = document.getElementById("grid");
+const pager = document.getElementById("pager");
+const countEl = document.getElementById("count");
+let all = [], sources = [], page = 1, cur = 0;
+const pages = () => Math.max(1, Math.ceil(sources.length / CONFIG.perPage));
+
+const resolved = {};
+const EXTS = () => CONFIG.list ? [""] : CONFIG.exts;
+const baseOf = n => CONFIG.folder + CONFIG.prefix + String(n).padStart(CONFIG.digits, "0");
+
+/* load an image, trying each file type until one works */
+function load(img, base, fail, ok) {
+  const exts = EXTS();
+  let k = 0;
+  img.onload = () => { resolved[base] = img.src; ok && ok(); };
+  img.onerror = () => { k++; if (k < exts.length) img.src = base + exts[k]; else fail && fail(); };
+  img.src = resolved[base] || base + exts[0];
+}
+const exists = n => new Promise(res => { const im = new Image(); load(im, baseOf(n), () => res(false), () => res(true)); });
+
+/* finds how many numbered pictures exist (pictures must be numbered with no gaps) */
+async function detect() {
+  if (typeof CONFIG.total === "number") return CONFIG.total;
+  const first = CONFIG.start, max = CONFIG.maxScan;
+  if (!(await exists(first))) return 0;
+  let lo = 0, hi = 1;                      // lo = last known to exist (offset), hi = candidate
+  while (hi < max && await exists(first + hi)) { lo = hi; hi *= 2; }
+  hi = Math.min(hi, max);
+  while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (await exists(first + mid)) lo = mid; else hi = mid; }
+  if (hi === max && await exists(first + max)) lo = max;
+  return lo + 1;
+}
+function build(n) {
+  if (CONFIG.list) return CONFIG.list.slice();
+  const out = [];
+  for (let i = 0; i < n; i++) out.push(baseOf(CONFIG.start + i));
+  return out;
+}
+
+function ordered(list) {
+  const mode = document.getElementById("order").value;
+  const a = list.slice();
+  if (mode === "new") return a.reverse();
+  if (mode === "rand") { for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } }
+  return a;
+}
+
+function render() {
+  page = Math.min(Math.max(1, page), pages());
+  grid.innerHTML = "";
+  const from = (page - 1) * CONFIG.perPage, to = Math.min(from + CONFIG.perPage, sources.length);
+  const frag = document.createDocumentFragment();
+  for (let i = from; i < to; i++) {
+    const fig = document.createElement("figure");
+    fig.className = "item"; fig.dataset.i = i;
+    const img = new Image();
+    img.decoding = "async";
+    img.alt = "Brownie customer testimonial " + (i + 1);
+    load(img, sources[i], () => fig.remove());
+    fig.appendChild(img);
+    frag.appendChild(fig);
+  }
+  grid.appendChild(frag);
+  countEl.textContent = "Page " + page + " of " + pages() + " · " + sources.length + " happy customers";
+  document.getElementById("empty").style.display = sources.length ? "none" : "block";
+  drawPager();
+}
+
+function drawPager() {
+  pager.innerHTML = "";
+  const total = pages();
+  if (total < 2) return;
+  const add = (label, p, opts = {}) => {
+    const b = document.createElement("button");
+    b.textContent = label; b.disabled = !!opts.disabled;
+    if (opts.on) { b.classList.add("on"); b.setAttribute("aria-current", "page"); }
+    if (opts.aria) b.setAttribute("aria-label", opts.aria);
+    b.onclick = () => go(p);
+    pager.appendChild(b);
+  };
+  const dots = () => { const s = document.createElement("span"); s.textContent = "…"; pager.appendChild(s); };
+  add("‹ Prev", page - 1, { disabled: page === 1, aria: "Previous page" });
+  const show = new Set([1, total, page - 1, page, page + 1]);
+  let last = 0;
+  for (let p = 1; p <= total; p++) {
+    if (!show.has(p)) continue;
+    if (p - last > 1) dots();
+    add(String(p), p, { on: p === page });
+    last = p;
+  }
+  add("Next ›", page + 1, { disabled: page === total, aria: "Next page" });
+}
+
+function go(p) { page = p; render(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+function reset() { sources = ordered(all); page = 1; render(); }
+
+/* lightbox (moves through all pictures, not just this page) */
+const lb = document.getElementById("lb"), lbImg = lb.querySelector("img"), cap = lb.querySelector(".cap");
+function open(i) { cur = i; load(lbImg, sources[cur]); cap.textContent = (cur + 1) + " / " + sources.length; lb.classList.add("on"); document.body.style.overflow = "hidden"; }
+function close() {
+  lb.classList.remove("on"); document.body.style.overflow = "";
+  const p = Math.floor(cur / CONFIG.perPage) + 1;
+  if (p !== page) { page = p; render(); }
+}
+function step(d) { open((cur + d + sources.length) % sources.length); }
+grid.addEventListener("click", e => { const f = e.target.closest(".item"); if (f) open(+f.dataset.i); });
+lb.querySelector(".x").onclick = close;
+lb.querySelector(".p").onclick = () => step(-1);
+lb.querySelector(".n").onclick = () => step(1);
+lb.addEventListener("click", e => { if (e.target === lb) close(); });
+document.addEventListener("keydown", e => {
+  if (!lb.classList.contains("on")) return;
+  if (e.key === "Escape") close();
+  if (e.key === "ArrowLeft") step(-1);
+  if (e.key === "ArrowRight") step(1);
+});
+let tx = 0;
+lb.addEventListener("touchstart", e => tx = e.touches[0].clientX, { passive: true });
+lb.addEventListener("touchend", e => { const d = e.changedTouches[0].clientX - tx; if (Math.abs(d) > 50) step(d > 0 ? -1 : 1); });
+
+/* controls */
+document.getElementById("order").onchange = reset;
+document.getElementById("size").onchange = e => grid.style.setProperty("--col", e.target.value + "px");
+document.getElementById("files").onchange = e => {
+  const f = [...e.target.files].sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+  all = f.map(x => { const u = URL.createObjectURL(x); resolved[u] = u; return u; });
+  reset();
+};
+
+countEl.textContent = "Counting photos…";
+detect().then(n => { all = build(n); reset(); });
+</script>
+</body>
+</html>
